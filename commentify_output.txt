@@ -1,0 +1,60 @@
+; Display(str)
+; 
+; description:      
+; The function is passed a <null> terminated string (str) to output to the LED
+; display. The string is passed by reference in ES:SI (i.e. the address of the
+; string is ES:SI). Note that ES is used (as opposed to DS) so the string can
+; be in the code segment (i.e. it can be a constant string) without needing to
+; change DS, which can cause many problems. The str is converted to its segment
+; representation and stored in the shared variable buffer.
+; 
+; operation:        
+; Each ASCII value in the string is processed one at a time until the <null>
+; character has been reached or NUM_DIGITS has been added to the buffer. The
+; segment code for each ASCII value is looked up in the ASCIISegTable and
+; stored in the display buffer.
+; 
+; Pseudo Code:
+; 
+; ASCII_NULL EQU 0
+; NUM_DIGITS EQU 8
+; 
+; Index = 0
+; WHILE str != ASCII_NULL index < NUM_DIGITS:
+;     STORE(buffer + index, ASCIISegTable[str])
+;     str += 1
+;     index += 1
+; 
+; 
+; arguments:        str(ES:SI) - 16-bit memory address where <null> terminated
+; string is stored to be output to the display. It is important to note the
+; string is not stored in the default segment DS for SI but in segment ES.
+; return values:    None
+; 
+; local variables:  index(AX)  - The index of the current buffer digit being
+; written to.
+; shared variables: buffer     - Array of words for 14-segment display to be
+; output to LED-display.
+;                   cur_segment - The current index in the buffer being
+; displayed.
+;                   
+; global variables: None
+; 
+; inputs:           None
+; outputs:          The display on the display unit will show the input string
+; str.
+; 
+; registers used:   Flags, AX, ES, SI
+; stack depth:      
+; 
+; error handling:   None
+; algorithms:       None
+; data structures:  None
+; 
+; limitations:      Assumes valid addresses.
+; known bugs:       None
+; special notes:    None
+; 
+; author:           Robert Eng
+; last modified:    10/29/16 initial revision
+; 
